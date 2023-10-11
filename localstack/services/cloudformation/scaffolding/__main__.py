@@ -294,6 +294,7 @@ class TemplateRenderer:
             case FileType.plugin:
                 kwargs["service"] = resource_name.service.lower()
                 kwargs["lower_resource"] = resource_name.resource.lower()
+                kwargs["pro"] = False
             case FileType.integration_test:
                 kwargs["black_box_template_path"] = str(
                     template_path(resource_name, FileType.minimal_template, tests_output_path)
