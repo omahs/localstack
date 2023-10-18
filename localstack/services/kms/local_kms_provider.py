@@ -4,13 +4,13 @@ from typing import Dict, Optional
 
 from localstack.aws.accounts import get_aws_account_id
 from localstack.aws.api.kms import KmsApi
-from localstack.config import LOCALSTACK_HOSTNAME
 from localstack.constants import DEFAULT_AWS_ACCOUNT_ID
 from localstack.services.infra import log_startup_message
 from localstack.services.kms import local_kms_server
 from localstack.services.plugins import ServiceLifecycleHook
 from localstack.utils.serving import Server
 from localstack.utils.sync import SynchronizedDefaultDict
+from localstack.utils.urls import localstack_host
 
 LOG = logging.getLogger(__name__)
 
@@ -25,7 +25,8 @@ class LocalKmsProvider(KmsApi, ServiceLifecycleHook):
         """
         account_id = get_aws_account_id()
         start_kms_local(account_id=account_id)
-        return f"http://{LOCALSTACK_HOSTNAME}:{get_server(account_id).port}"
+        host_definition = localstack_host(custom_port=get_server(account_id).port)
+        return f"http://{host_definition.host_and_port()}"
 
 
 def start_kms_local(

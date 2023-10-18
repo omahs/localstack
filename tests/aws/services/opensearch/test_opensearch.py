@@ -14,7 +14,7 @@ from opensearchpy.exceptions import AuthorizationException
 from localstack import config
 from localstack.aws.accounts import get_aws_account_id
 from localstack.aws.api.opensearch import AdvancedSecurityOptionsInput, MasterUserOptions
-from localstack.config import EDGE_BIND_HOST, LOCALSTACK_HOSTNAME
+from localstack.config import EDGE_BIND_HOST
 from localstack.constants import OPENSEARCH_DEFAULT_VERSION, OPENSEARCH_PLUGIN_LIST
 from localstack.services.opensearch import provider
 from localstack.services.opensearch.cluster import CustomEndpoint, EdgeProxiedOpensearchCluster
@@ -31,6 +31,7 @@ from localstack.testing.pytest import markers
 from localstack.utils.common import call_safe, poll_condition, retry, short_uid, start_worker_thread
 from localstack.utils.common import safe_requests as requests
 from localstack.utils.strings import to_str
+from localstack.utils.urls import localstack_host
 
 LOG = logging.getLogger(__name__)
 
@@ -870,7 +871,7 @@ class TestSingletonClusterManager:
         parts = cluster_0.url.split(":")
         assert parts[0] == "http"
         # either f"//{the bind host}" is used, or in the case of "//0.0.0.0" the localstack hostname instead
-        assert parts[1][2:] in [EDGE_BIND_HOST, LOCALSTACK_HOSTNAME]
+        assert parts[1][2:] in [EDGE_BIND_HOST, localstack_host().host]
         assert int(parts[2]) in range(
             config.EXTERNAL_SERVICE_PORTS_START, config.EXTERNAL_SERVICE_PORTS_END
         )
