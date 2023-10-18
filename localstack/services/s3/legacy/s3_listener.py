@@ -1339,7 +1339,7 @@ class ProxyListenerS3(ProxyListener):
 
     @staticmethod
     def get_201_response(key, bucket_name):
-        host_definition = localstack_host(use_hostname_external=True)
+        host_definition = localstack_host()
         return """
                 <PostResponse>
                     <Location>{protocol}://{host}/{encoded_key}</Location>
@@ -1360,9 +1360,7 @@ class ProxyListenerS3(ProxyListener):
     def _update_location(content, bucket_name):
         bucket_name = normalize_bucket_name(bucket_name)
 
-        host_definition = localstack_host(
-            use_hostname_external=True, custom_port=config.get_edge_port_http()
-        )
+        host_definition = localstack_host(custom_port=config.get_edge_port_http())
         return re.sub(
             r"<Location>\s*([a-zA-Z0-9\-]+)://[^/]+/([^<]+)\s*</Location>",
             r"<Location>%s://%s/%s/\2</Location>"
