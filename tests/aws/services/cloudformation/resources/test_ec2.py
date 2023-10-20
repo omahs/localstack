@@ -84,3 +84,34 @@ def test_internet_gateway_ref_and_attr(deploy_cfn_template, snapshot, aws_client
 
     snapshot.match("outputs", stack.outputs)
     snapshot.match("description", response["StackResourceDetail"])
+
+
+@markers.aws.validated
+@markers.snapshot.skip_snapshot_verify(
+    paths=[
+        "$..Tags",
+        "$..Options.AssociationDefaultRouteTableId",
+        "$..Options.PropagationDefaultRouteTableId",
+    ]
+)
+def test_transit_gateway_attachment(deploy_cfn_template, aws_client, snapshot):
+    stack = deploy_cfn_template(
+        template_path=os.path.join(THIS_FOLDER, "../../../templates/transit_gateway_attachment.yml")
+    )
+
+    gateway_description = aws_client.ec2.describe_transit_gateways(
+        TransitGatewayIds=[stack.outputs["TransitGateway"]]
+    )
+    attachment_description = aws_client.ec2.describe_transit_gateway_attachments(
+        TransitGatewayAttachmentIds=[stack.outputs["Attachment"]]
+    )
+
+    snapshot.add_transformer(snapshot.transform.key_value("TransitGatewayRouteTableId"))
+    snapshot.add_transformer(snapshot.transform.key_value("AssociationDefaultRouteTableId"))
+    snapshot.add_transformer(snapshot.transform.key_value("PropagatioDefaultRouteTableId"))
+    snapshot.add_transformer(snapshot.transform.key_value("ResourceId"))
+    snapshot.add_transformer(snapshot.transform.key_value("TransitGatewayAttachmentId"))
+    snapshot.add_transformer(snapshot.transform.key_value("TransitGatewayId"))
+
+    snapshot.match("attachment", attachment_description["TransitGatewayAttachments"][0])
+    snapshot.match("gateway", gateway_description["TransitGateways"][0])

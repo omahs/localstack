@@ -75,6 +75,8 @@ PROVIDER_DEFAULTS = {
     "AWS::ElasticBeanstalk::ConfigurationTemplate": "ResourceProvider",
     "AWS::CertificateManager::Certificate": "ResourceProvider",
     "AWS::EKS::Nodegroup": "ResourceProvider",
+    "AWS::EC2::TransitGateway": "ResourceProvider",
+    "AWS::EC2::TransitGatewayAttachment": "ResourceProvider",
 }
 
 
