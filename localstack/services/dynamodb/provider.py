@@ -976,7 +976,6 @@ class DynamoDBProvider(DynamodbApi, ServiceLifecycleHook):
         result = self.forward_request(context)
 
         # determine and forward stream records
-        streams_enabled_cache = {}
         records = self.prepare_transact_write_item_records(
             transact_items=transact_write_items_input["TransactItems"],
             existing_items=existing_items,
@@ -984,11 +983,7 @@ class DynamoDBProvider(DynamodbApi, ServiceLifecycleHook):
         event_sources_or_streams_enabled = False
         for record in records:
             event_sources_or_streams_enabled = (
-                event_sources_or_streams_enabled
-                or has_streams_enabled(
-                    record["eventSourceARN"],
-                    streams_enabled_cache,
-                )
+                event_sources_or_streams_enabled or has_streams_enabled(record["eventSourceARN"])
             )
         if event_sources_or_streams_enabled:
             self.forward_stream_records(context.account_id, context.region, records)
