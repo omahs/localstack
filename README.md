@@ -48,7 +48,7 @@ LocalStack supports a growing number of AWS services, like AWS Lambda, S3, Dynam
 LocalStack also provides additional features to make your life as a cloud developer easier! Check out LocalStack's [Cloud Developer Tools](https://docs.localstack.cloud/user-guide/tools/) for more information.
 
 ## Installation
-The quickest way get started with LocalStack is by using the LocalStack CLI.
+The quickest way to get started with LocalStack is by using the LocalStack CLI.
 It allows you to start and manage the LocalStack Docker container from your command line.
 Please make sure that you have a working [`docker` environment](https://docs.docker.com/get-docker/) on your machine before moving on.
 
